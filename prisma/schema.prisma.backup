@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// Tabel khusus portal verifikasi sertifikat Nexovate.
+/// Tidak menyentuh tabel lain di database Supabase yang sudah ada.
+model NexovateCertificate {
+  id                          String   @id @default(cuid())
+  certificateNumber           String   @unique @map("certificate_number")
+  normalizedCertificateNumber String   @unique @map("normalized_certificate_number")
+  participantName             String   @map("participant_name")
+  courseName                  String   @map("course_name")
+  completionDate              String   @map("completion_date")
+  issuer                      String   @default("Nexovate")
+  verified                    Boolean  @default(true)
+  createdAt                   DateTime @default(now()) @map("created_at")
+  updatedAt                   DateTime @updatedAt @map("updated_at")
+
+  @@map("nexovate_certificates")
+}
